@@ -202,8 +202,8 @@ namespace triangles
         private void export_button_Click(object sender, EventArgs e)
         {
             // Get the app's local folder.
-           appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-           path = appData + @"\TriangleApp";
+           //appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+           string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TriangleApp";
 
            Directory.CreateDirectory(path);
 
@@ -243,9 +243,9 @@ namespace triangles
         {
             // XML handler to read from xml file and extract a,b,c values to listbox
             listBox.Items.Clear();
-            XmlTextReader r = new XmlTextReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TriangleApp\triangles.Xml");
+            XmlTextReader reader = new XmlTextReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TriangleApp\triangles.Xml");
             XmlDocument doc = new XmlDocument();
-            doc.Load(r);
+            doc.Load(reader);
 
             
             foreach (XmlNode node in doc.DocumentElement.ChildNodes)
@@ -255,33 +255,33 @@ namespace triangles
                     if (child.NodeType == XmlNodeType.Element && child.Name == "a")
                     {
                     
-                            aa = child.InnerText;       
+                            aXml = child.InnerText;       
             
                     }
                     else if (child.NodeType == XmlNodeType.Element && child.Name == "b")
                     {
                     
-                            bb = child.InnerText;
+                            bXml = child.InnerText;
                 
                     }
                     else if (child.NodeType == XmlNodeType.Element && child.Name == "c")
                     {
                     
-                            cc = child.InnerText;  
+                            cXml = child.InnerText;  
                 
                     }
 	            }
 
-                a = Convert.ToInt32(aa);
-                b = Convert.ToInt32(bb);
-                c = Convert.ToInt32(cc);
+                a = Convert.ToInt32(aXml);
+                b = Convert.ToInt32(bXml);
+                c = Convert.ToInt32(cXml);
 
-                listBox.Items.Add("a: " + aa + "  b: " + bb + " c: " + cc);    
+                listBox.Items.Add("a: " + aXml + "  b: " + bXml + " c: " + cXml);    
                 triangleList.Add(new Triangle() { A = a, B = b, C = c});
 
             }
 
-            r.Close();
+            reader.Close();
         }
         #endregion
 
@@ -314,12 +314,10 @@ namespace triangles
         private int a { get; set; }
         private int b { get; set; }
         private int c { get; set; }
-        private string aa { get; set; }
-        private string bb { get; set; }
-        private string cc { get; set; }
-        private string appData { get; set; }
-        private string path { get; set; }
-
+        private string aXml { get; set; }
+        private string bXml { get; set; }
+        private string cXml { get; set; }        
+        
 
         #endregion
     }
