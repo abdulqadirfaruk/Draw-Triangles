@@ -27,9 +27,9 @@ namespace triangles
             Random rnd = new Random();
 
             // Draw triangle if draw button is clicked
-            if (draw)
+            if (drawListbox || drawBtn)
             {
-                // Draw trianles with different colors
+                // Draw trianle with different colors
                 Color Color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
                 SolidBrush Brush = new SolidBrush(Color);
 
@@ -63,7 +63,14 @@ namespace triangles
         #region drawButton
         private void drawButton_Click(object sender, EventArgs e)
         {
-            draw = true;
+            
+            drawBtn = true;
+
+            if (drawBtn) 
+            {
+                drawListbox = false;
+            }
+            
 
             // Create new triangle object
             Triangle triangle = new Triangle();
@@ -162,16 +169,24 @@ namespace triangles
 
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
+            drawListbox = true;
+
+            if (drawListbox) 
+            {
+                drawBtn = false;
+            }
+            
             // get a,b,c values from the index of triangelelist that correspomds to index of selected listbox item
 
-            string listboxindex;
-            string triitem;
+            string listBoxIndex;
+            string triangleIitem;
 
-            if (listBox.SelectedIndex > -1)
+            if (listBox.SelectedIndex >= 0)
             {
 
-                listboxindex = Convert.ToString(listBox.SelectedIndex);
-                triitem = Convert.ToString(triangleList[listBox.SelectedIndex]);
+                listBoxIndex = Convert.ToString(listBox.SelectedIndex);
+                triangleIitem = Convert.ToString(triangleList[listBox.SelectedIndex]);
                 
                 a = triangleList[listBox.SelectedIndex].A;
                 b = triangleList[listBox.SelectedIndex].B;
@@ -192,11 +207,11 @@ namespace triangles
 
            Directory.CreateDirectory(path);
 
-           dt.TableName = "Triangle";
+           // !dt.Columns.Contains("a") && !dt.Columns.Contains("b") && !dt.Columns.Contains("c")
             
-           if (!dt.Columns.Contains("a") && !dt.Columns.Contains("b") && !dt.Columns.Contains("c"))
+           if (!dt.TableName.Contains("Triangle"))
            {
-               
+               dt.TableName = "Triangle";
                dt.Columns.Add("a");
                dt.Columns.Add("b");
                dt.Columns.Add("c");
@@ -217,17 +232,18 @@ namespace triangles
            dt.WriteXml(path + @"\triangles.Xml");
 
            MessageBox.Show("Triangles saved to: " + path + @"\triangles.Xml" + "\nUse IMPORT button to load saved triangles again.");
-
+           
            listBox.Items.Clear();
-
+           triangleList.Clear();
+           dt.Rows.Clear();
         }
 
         //Load saved triangles
         private void import_Button_Click(object sender, EventArgs e)
         {
             // XML handler to read from xml file and extract a,b,c values to listbox
-            
-            XmlTextReader r = new XmlTextReader(path + @"\triangles.Xml");
+            listBox.Items.Clear();
+            XmlTextReader r = new XmlTextReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TriangleApp\triangles.Xml");
             XmlDocument doc = new XmlDocument();
             doc.Load(r);
 
@@ -256,7 +272,13 @@ namespace triangles
                     }
 	            }
 
-                listBox.Items.Add("a: " + aa + "  b: " + bb + " c: " + cc);                   
+                a = Convert.ToInt32(aa);
+                b = Convert.ToInt32(bb);
+                c = Convert.ToInt32(cc);
+
+                listBox.Items.Add("a: " + aa + "  b: " + bb + " c: " + cc);    
+                triangleList.Add(new Triangle() { A = a, B = b, C = c});
+
             }
 
             r.Close();
@@ -264,7 +286,8 @@ namespace triangles
         #endregion
 
         #region formVariables
-        bool draw = false;
+        bool drawListbox = false;
+        bool drawBtn = false;
 
         #endregion
 
