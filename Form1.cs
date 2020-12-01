@@ -149,11 +149,19 @@ namespace triangles
             {
                 listboxindex = Convert.ToString(listBox.SelectedIndex);
                 triitem = Convert.ToString(triangleList[listBox.SelectedIndex]);
-                MessageBox.Show("listbox index: " + listboxindex + "\n\n" + "Triangle list index item: " + triitem);
+                //MessageBox.Show("listbox index: " + listboxindex + "\n\n" + "Triangle list index item: " + triitem + "\nA: " + triangleList[listBox.SelectedIndex].A.ToString());
 
                 // Get the value of selected triangle from the index and assign them to a,b,s, then call panel1.refresh, dont forget to set bool draw = true
+                a = triangleList[listBox.SelectedIndex].A;
+                b = triangleList[listBox.SelectedIndex].B;
+                c = triangleList[listBox.SelectedIndex].B;
+
+
+                panel1.Refresh();
+                
             }
             
+
 
             /*if ()
             {
