@@ -8,45 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml;
+
 
 namespace triangles
 {
     public partial class Form1 : Form
     {
-        #region formVariables
-        bool draw = false;
-
-        #endregion
-
         public Form1()
         {
             InitializeComponent();
         }
 
-        #region triangleClass
-        class Triangle
-        {
-            public int A { get; set; }
-            public int B { get; set; }
-            public int C { get; set; }
-
-            public override string ToString()
-            {
-                return "a: " + A + "  b: " + B +" c: "+ C;
-            }
-        }
-
-        // store unique triangles in a list
-        List<Triangle> triangleList = new List<Triangle>();
-
-
-        #endregion
-
-        #region properties
-        private int a { get; set; }
-        private int b { get; set; }
-        private int c { get; set; }
-        #endregion
 
         #region drawGraphics
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -136,7 +109,9 @@ namespace triangles
             // delete triangle from triangleList and listbox
             if (listBox.SelectedIndex > -1)
             {
+
                 string val = listBox.SelectedItem.ToString();
+
                 foreach (var item in triangleList)
                 {
                    
@@ -166,32 +141,153 @@ namespace triangles
 
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // get a,b,c values from the index of triangelelist that correspomds to index of selected listbox item
+            string listboxindex;
+            string triitem;
 
+            if (listBox.SelectedIndex > -1)
+            {
+                listboxindex = Convert.ToString(listBox.SelectedIndex);
+                triitem = Convert.ToString(triangleList[listBox.SelectedIndex]);
+                MessageBox.Show("listbox index: " + listboxindex + "\n\n" + "Triangle list index item: " + triitem);
+
+                // Get the value of selected triangle from the index and assign them to a,b,s, then call panel1.refresh, dont forget to set bool draw = true
+            }
+            
+
+            /*if ()
+            {
+                panel1.Refresh();
+            }
+            */
         }
 
         #region importExport
         private void export_button_Click(object sender, EventArgs e)
         {
-            /* make an XML handler to reads and load values of each item 
-             * in the triangleList as
-             * <item> 
-             *  <a>value</a>
-             *  <b>value</b>
-             *  <c>value</c>  
-             * </item>
-             * <item> 
-             *  <a>value</a>
-             *  <b>value</b>
-             *  <c>value</c>  
-             * </item>
-             */
+            // Get the app's local folder.
+            appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            path = appData + @"\TriangleApp";
+
+            Directory.CreateDirectory(path);
+
+           dt.TableName = "Triangle";
+            
+           if (!dt.Columns.Contains("a") && !dt.Columns.Contains("b") && !dt.Columns.Contains("c"))
+           {
+               
+               dt.Columns.Add("a");
+               dt.Columns.Add("b");
+               dt.Columns.Add("c");
+         
+           }
+            
+
+            foreach (var item in triangleList)
+            {
+
+                dt.Rows.Add();
+                dt.Rows[dt.Rows.Count - 1]["a"] = item.A;
+                dt.Rows[dt.Rows.Count - 1]["b"] = item.B;
+                dt.Rows[dt.Rows.Count - 1]["c"] = item.C;
+
+            }            
+
+            dt.WriteXml(path + @"\triangles.Xml");
+            MessageBox.Show("Triangles saved to: " + path + @"\triangles.Xml" + "\nUse IMPORT button to load the saved triangles again.");
+            listBox.Items.Clear();
         }
 
         private void import_Button_Click(object sender, EventArgs e)
         {
             // XML handler to read from xml file and extract a,b,c values to listbox
-             
+            
+            XmlTextReader r = new XmlTextReader(path + @"\triangles.Xml");
+            XmlDocument doc = new XmlDocument();
+            doc.Load(r);
+
+            
+                foreach (XmlNode node in doc.DocumentElement.ChildNodes)
+                {
+                    foreach (XmlNode child in node)
+	                {
+                        if (child.NodeType == XmlNodeType.Element && child.Name == "a")
+                        {
+                    
+                                aa = child.InnerText;       
+                
+                        }
+                        else if (child.NodeType == XmlNodeType.Element && child.Name == "b")
+                        {
+                    
+                                bb = child.InnerText;
+                
+                        }
+                        else if (child.NodeType == XmlNodeType.Element && child.Name == "c")
+                        {
+                    
+                                cc = child.InnerText;  
+                
+                        }
+	                }
+                    listBox.Items.Add("a: " + aa + "  b: " + bb + " c: " + cc);                   
+                }
+                r.Close();
+
+            /*dt.Rows.Clear();
+
+            dt.ReadXml(path + @"\triangles.Xml");
+
+            foreach (DataRow row in dt.Rows)
+            {
+                foreach (var column in row.ItemArray)
+                {
+
+                    listBox.Items.Add(column);
+                }
+            }
+            */
         }
         #endregion
+
+        #region formVariables
+        bool draw = false;
+
+        #endregion
+
+        #region triangleClass
+        class Triangle
+        {
+            public int A { get; set; }
+            public int B { get; set; }
+            public int C { get; set; }
+
+            public override string ToString()
+            {
+                return "a: " + A + "  b: " + B +" c: "+ C;
+            }
+        }
+
+        // store unique triangles in a list
+        List<Triangle> triangleList = new List<Triangle>();
+
+
+        #endregion
+
+        #region properties
+        private int a { get; set; }
+        private int b { get; set; }
+        private int c { get; set; }
+        private string aa { get; set; }
+        private string bb { get; set; }
+        private string cc { get; set; }
+        private string appData { get; set; }
+        private string path { get; set; }
+
+
+        DataTable dt = new DataTable();
+
+        #endregion
     }
+    
 }

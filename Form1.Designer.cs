@@ -171,7 +171,7 @@ namespace triangles
             // listBox
             // 
             this.listBox.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.listBox.Font = new System.Drawing.Font("Verdana Pro Semibold", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox.Font = new System.Drawing.Font("Verdana Pro Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox.FormattingEnabled = true;
             this.listBox.ItemHeight = 20;
             this.listBox.Location = new System.Drawing.Point(666, 9);
