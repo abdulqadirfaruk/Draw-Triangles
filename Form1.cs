@@ -24,10 +24,14 @@ namespace triangles
         #region drawGraphics
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
+            Random rnd = new Random();
+
             // Draw triangle if draw button is clicked
             if (draw)
             {
-                Pen blackPen = new Pen(Color.Blue, 4);
+                // Draw trianles with different colors
+                Color Color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                SolidBrush Brush = new SolidBrush(Color);
 
                 // Calculate triangle coordinates from speified lengths
                 // Initial const position to start at center - there must be a better way around this :(
@@ -50,7 +54,7 @@ namespace triangles
                  point3
                 };
 
-                e.Graphics.DrawPolygon(blackPen, trianglePoints);
+                e.Graphics.FillPolygon(Brush, trianglePoints);
             }
             
         }
