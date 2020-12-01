@@ -42,12 +42,14 @@ namespace triangles
                 Point point1 = new Point(x1, y1);
                 Point point2 = new Point(x2, y2);
                 Point point3 = new Point(x3, y3);
+
                 Point[] trianglePoints =
                          {
                  point1,
                  point2,
                  point3
-             };
+                };
+
                 e.Graphics.DrawPolygon(blackPen, trianglePoints);
             }
             
@@ -72,11 +74,15 @@ namespace triangles
             // Only accept lengths greater than 0
             if (a != 0 && b != 0 && c != 0)
             {
+
                 panel1.Refresh();
+
             }
             else
             {
-                MessageBox.Show("ALERT: The values of a, b, c must be greater than 0");                
+
+                MessageBox.Show("ALERT: The values of a, b, c must be greater than 0");  
+                
             }
 
             // hold a copy of triangleList vales for validation
@@ -87,18 +93,24 @@ namespace triangles
             // loop around all elements in triangs
             foreach (var item in triangleList)
             {
+
                 // check in loop if item.ToString() is equal to the above string or not
                 if (String.Equals(item.ToString(), val))
                 {
+
                     duplicate = true;
                     break;
-                }                
+
+                }       
+                
             }
             if (!duplicate)
             {
+
                 // then add triangle to list and add list to listbox
                 triangleList.Add(new Triangle() { A = a, B = b, C = c });
                 listBox.Items.Add(triangleList.Last());
+
             }
         }
         #endregion
@@ -117,17 +129,22 @@ namespace triangles
                    
                     if (String.Equals(item.ToString(), val))
                     {
+
                         triangleList.Remove(item);
                         MessageBox.Show("Succesfully deleted triangle  " + val);
                         break;
+
                     }
                 }
+
                 listBox.Items.RemoveAt(listBox.SelectedIndex);
                 
             }
             else if (listBox.SelectedIndex == -1)
             {
+
                 MessageBox.Show("ALERT: Triangle must be selected from the list!");
+
             }
         }
         #endregion
@@ -142,42 +159,34 @@ namespace triangles
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // get a,b,c values from the index of triangelelist that correspomds to index of selected listbox item
+
             string listboxindex;
             string triitem;
 
             if (listBox.SelectedIndex > -1)
             {
+
                 listboxindex = Convert.ToString(listBox.SelectedIndex);
                 triitem = Convert.ToString(triangleList[listBox.SelectedIndex]);
-                //MessageBox.Show("listbox index: " + listboxindex + "\n\n" + "Triangle list index item: " + triitem + "\nA: " + triangleList[listBox.SelectedIndex].A.ToString());
-
-                // Get the value of selected triangle from the index and assign them to a,b,s, then call panel1.refresh, dont forget to set bool draw = true
+                
                 a = triangleList[listBox.SelectedIndex].A;
                 b = triangleList[listBox.SelectedIndex].B;
                 c = triangleList[listBox.SelectedIndex].B;
-
 
                 panel1.Refresh();
                 
             }
             
-
-
-            /*if ()
-            {
-                panel1.Refresh();
-            }
-            */
         }
 
         #region importExport
         private void export_button_Click(object sender, EventArgs e)
         {
             // Get the app's local folder.
-            appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            path = appData + @"\TriangleApp";
+           appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+           path = appData + @"\TriangleApp";
 
-            Directory.CreateDirectory(path);
+           Directory.CreateDirectory(path);
 
            dt.TableName = "Triangle";
             
@@ -191,21 +200,25 @@ namespace triangles
            }
             
 
-            foreach (var item in triangleList)
-            {
+           foreach (var item in triangleList)
+           {
 
-                dt.Rows.Add();
-                dt.Rows[dt.Rows.Count - 1]["a"] = item.A;
-                dt.Rows[dt.Rows.Count - 1]["b"] = item.B;
-                dt.Rows[dt.Rows.Count - 1]["c"] = item.C;
+               dt.Rows.Add();
+               dt.Rows[dt.Rows.Count - 1]["a"] = item.A;
+               dt.Rows[dt.Rows.Count - 1]["b"] = item.B;
+               dt.Rows[dt.Rows.Count - 1]["c"] = item.C;
 
-            }            
+           }            
 
-            dt.WriteXml(path + @"\triangles.Xml");
-            MessageBox.Show("Triangles saved to: " + path + @"\triangles.Xml" + "\nUse IMPORT button to load the saved triangles again.");
-            listBox.Items.Clear();
+           dt.WriteXml(path + @"\triangles.Xml");
+
+           MessageBox.Show("Triangles saved to: " + path + @"\triangles.Xml" + "\nUse IMPORT button to load saved triangles again.");
+
+           listBox.Items.Clear();
+
         }
 
+        //Load saved triangles
         private void import_Button_Click(object sender, EventArgs e)
         {
             // XML handler to read from xml file and extract a,b,c values to listbox
@@ -215,46 +228,34 @@ namespace triangles
             doc.Load(r);
 
             
-                foreach (XmlNode node in doc.DocumentElement.ChildNodes)
-                {
-                    foreach (XmlNode child in node)
-	                {
-                        if (child.NodeType == XmlNodeType.Element && child.Name == "a")
-                        {
-                    
-                                aa = child.InnerText;       
-                
-                        }
-                        else if (child.NodeType == XmlNodeType.Element && child.Name == "b")
-                        {
-                    
-                                bb = child.InnerText;
-                
-                        }
-                        else if (child.NodeType == XmlNodeType.Element && child.Name == "c")
-                        {
-                    
-                                cc = child.InnerText;  
-                
-                        }
-	                }
-                    listBox.Items.Add("a: " + aa + "  b: " + bb + " c: " + cc);                   
-                }
-                r.Close();
-
-            /*dt.Rows.Clear();
-
-            dt.ReadXml(path + @"\triangles.Xml");
-
-            foreach (DataRow row in dt.Rows)
+            foreach (XmlNode node in doc.DocumentElement.ChildNodes)
             {
-                foreach (var column in row.ItemArray)
-                {
+                foreach (XmlNode child in node)
+	            {
+                    if (child.NodeType == XmlNodeType.Element && child.Name == "a")
+                    {
+                    
+                            aa = child.InnerText;       
+            
+                    }
+                    else if (child.NodeType == XmlNodeType.Element && child.Name == "b")
+                    {
+                    
+                            bb = child.InnerText;
+                
+                    }
+                    else if (child.NodeType == XmlNodeType.Element && child.Name == "c")
+                    {
+                    
+                            cc = child.InnerText;  
+                
+                    }
+	            }
 
-                    listBox.Items.Add(column);
-                }
+                listBox.Items.Add("a: " + aa + "  b: " + bb + " c: " + cc);                   
             }
-            */
+
+            r.Close();
         }
         #endregion
 
@@ -266,6 +267,7 @@ namespace triangles
         #region triangleClass
         class Triangle
         {
+
             public int A { get; set; }
             public int B { get; set; }
             public int C { get; set; }
@@ -276,10 +278,9 @@ namespace triangles
             }
         }
 
-        // store unique triangles in a list
+        // List and datatable of triangles for drawing and xmlHandling
         List<Triangle> triangleList = new List<Triangle>();
-
-
+        DataTable dt = new DataTable();
         #endregion
 
         #region properties
@@ -292,8 +293,6 @@ namespace triangles
         private string appData { get; set; }
         private string path { get; set; }
 
-
-        DataTable dt = new DataTable();
 
         #endregion
     }
