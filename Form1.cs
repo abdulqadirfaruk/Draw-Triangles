@@ -77,10 +77,14 @@ namespace triangles
             a = triangle.A;
             b = triangle.B;
             c = triangle.C;
-
-            a = Convert.ToInt32(atextBox.Text);
-            b = Convert.ToInt32(btextBox.Text);
-            c = Convert.ToInt32(ctextBox.Text);
+            
+            try 
+            {
+                a = Convert.ToInt32(atextBox.Text);
+                b = Convert.ToInt32(btextBox.Text);
+                c = Convert.ToInt32(ctextBox.Text);
+            
+            
 
             // Only accept lengths greater than 0
             if (a != 0 && b != 0 && c != 0)
@@ -96,6 +100,11 @@ namespace triangles
                 
             }
 
+            }
+            catch
+            {
+                MessageBox.Show("a, b, c must be numbers!");
+            }
             // hold a copy of triangleList vales for validation
             string val = ("a: " + a + "  b: " + b + " c: " + c);
 
@@ -243,9 +252,12 @@ namespace triangles
         {
             // XML handler to read from xml file and extract a,b,c values to listbox
             listBox.Items.Clear();
-            XmlTextReader reader = new XmlTextReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TriangleApp\triangles.Xml");
-            XmlDocument doc = new XmlDocument();
-            doc.Load(reader);
+            try 
+            {
+                XmlTextReader reader = new XmlTextReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TriangleApp\triangles.Xml");
+                XmlDocument doc = new XmlDocument();
+                doc.Load(reader);
+            
 
             
             foreach (XmlNode node in doc.DocumentElement.ChildNodes)
@@ -282,6 +294,12 @@ namespace triangles
             }
 
             reader.Close();
+
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("No saved triangles found! Please add and export some triangles!");
+            }
         }
         #endregion
 
