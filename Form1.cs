@@ -11,6 +11,7 @@ using System.IO;
 using System.Xml;
 
 
+
 namespace triangles
 {
     public partial class Form1 : Form
@@ -20,10 +21,12 @@ namespace triangles
             InitializeComponent();
         }
 
+        
 
         #region drawGraphics
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
+           
             Random rnd = new Random();
 
             // Draw triangle if draw button is clicked
@@ -86,25 +89,28 @@ namespace triangles
             
             
 
-            // Only accept lengths greater than 0
-            if (a != 0 && b != 0 && c != 0)
-            {
+                // Only accept lengths greater than 0
+                if (a > 0 && b > 0 && c > 0)
+                {
 
-                panel1.Refresh();
-
-            }
-            else
-            {
-
-                MessageBox.Show("ALERT: The values of a, b, c must be greater than 0");  
+                    panel1.Refresh();
                 
-            }
+                }
+                else
+                {
+
+                    MessageBox.Show("ALERT: The values of a, b, c must be greater than 0");  
+                    return;
+                }
 
             }
             catch
             {
                 MessageBox.Show("a, b, c must be numbers!");
+                return;
             }
+            
+
             // hold a copy of triangleList vales for validation
             string val = ("a: " + a + "  b: " + b + " c: " + c);
 
@@ -127,11 +133,14 @@ namespace triangles
             if (!duplicate)
             {
 
+
                 // then add triangle to list and add list to listbox
                 triangleList.Add(new Triangle() { A = a, B = b, C = c });
                 listBox.Items.Add(triangleList.Last());
 
             }
+
+
         }
         #endregion
 
@@ -301,8 +310,19 @@ namespace triangles
                 MessageBox.Show("No saved triangles found! Please add and export some triangles!");
             }
         }
-        #endregion
 
+        #endregion
+        /*
+        private void atextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Char chr = e.KeyChar;
+            if (!Char.IsDigit(chr))
+                {
+                e.Handled = true;
+                MessageBox.Show("Please enter only ins");
+            }
+        }
+        */
         #region formVariables
         bool drawListbox = false;
         bool drawBtn = false;
